@@ -250,8 +250,12 @@
 <div id="map"></div>
 <script type="text/javascript">
 // <![CDATA[
-	var map = new FacilMap.Map("map");
-	map.addAllAvailableLayers();
+	var map = new OpenLayers.Map("map");
+
+	map.addControl(new OpenLayers.Control.LayerSwitcher());
+
+	var osm = new OpenLayers.Layer.OSM("OpenStreetMap.org Mapnik");
+	map.addLayer(osm);
 
 	window.onresize = function(){ document.getElementById("map").style.height = Math.round(window.innerHeight*.9)+"px"; map.updateSize(); };
 	window.onresize();
@@ -259,16 +263,6 @@
 	var styleMapUnchanged = new OpenLayers.StyleMap({strokeColor: "#0000ff", strokeWidth: 3, strokeOpacity: 0.3});
 	var styleMapCreated = new OpenLayers.StyleMap({strokeColor: "#44ff44", strokeWidth: 3, strokeOpacity: 0.5});
 	var styleMapRemoved = new OpenLayers.StyleMap({strokeColor: "#ff0000", strokeWidth: 3, strokeOpacity: 0.5});
-
-	var osbLayer = new OpenLayers.Layer.OpenStreetBugs("OpenStreetBugs", { shortName: "osb", visibility: false });
-	map.addLayer(osbLayer);
-	osbLayer.setZIndex(500);
-
-	var layerMarkers = new FacilMap.Layer.Markers.LonLat("Markers", { shortName: "m" });
-	map.addLayer(layerMarkers);
-	var clickControl = new FacilMap.Control.CreateMarker(layerMarkers);
-	map.addControl(clickControl);
-	clickControl.activate();
 
 	var projection = new OpenLayers.Projection("EPSG:4326");
 	var layerCreated = new OpenLayers.Layer.PointTrack("(Created)", {
@@ -340,9 +334,6 @@
 	else
 		map.zoomToMaxExtent();
 
-	var hashHandler = new FacilMap.Control.URLHashHandler();
-	map.addControl(hashHandler);
-	hashHandler.activate();
 // ]]>
 </script>
 <%
